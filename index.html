@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#E7E4DD" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0C0C0B" media="(prefers-color-scheme: dark)">
+  <title>Tomate</title>
+  <meta name="description" content="Timer Pomodoro inspirado num timer de cozinha: gire o botão para ajustar o tempo e acompanhe seus tomates com estatísticas do dia, da semana e do ano.">
+  <link rel="icon" id="favicon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="Logo%20Pomodoro.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="focus">
+  <header class="top">
+    <h1 class="brand">
+      <img class="brand-logo" src="Logo%20Pomodoro.svg" alt="" width="40" height="40">
+      <span>Tomate</span>
+    </h1>
+    <button type="button" id="openSettings" class="btn ghost with-icon">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/></svg>
+      <span class="btn-label">Ajustes</span>
+    </button>
+  </header>
+
+  <main class="layout">
+    <section class="case timer" aria-label="Timer">
+      <div class="modes" role="group" aria-label="Tipo de período">
+        <span class="modes-pill" id="modesPill" aria-hidden="true"></span>
+        <button type="button" data-mode="focus">Foco</button>
+        <button type="button" data-mode="short">Pausa curta</button>
+        <button type="button" data-mode="long">Pausa longa</button>
+      </div>
+
+      <!-- Mostrador: o mesmo desenho do logo, com o botão girando conforme o tempo -->
+      <div class="dial" id="dial" role="slider" tabindex="0" aria-label="Tempo do timer, em minutos" aria-valuemin="1">
+        <svg viewBox="40 40 432 432" aria-hidden="true">
+          <path class="sector" id="sector"/>
+          <path class="arc" id="arc"/>
+          <g id="ticks"></g>
+          <line class="mark" id="mark" x1="256" y1="48" x2="256" y2="80"/>
+          <g id="knobWrap">
+            <circle class="knob-body" cx="256" cy="256" r="144"/>
+            <circle class="knob-ring" cx="256" cy="256" r="128"/>
+            <g id="knob">
+              <rect class="slot" x="242" y="112" width="28" height="288" rx="4"/>
+              <rect class="indicator" x="248" y="124" width="16" height="110" rx="8"/>
+              <circle class="knob-dot" cx="256" cy="340" r="6"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="display">
+        <div class="readout" id="readout" role="timer"></div>
+        <div class="display-meta">
+          <span><i class="led" aria-hidden="true"></i><span id="modeLabel">Foco</span></span>
+          <span id="cycle"></span>
+        </div>
+      </div>
+
+      <label class="task">
+        <span class="task-label">Em que você vai focar?</span>
+        <input id="task" type="text" maxlength="80" placeholder="Ex.: estudar cálculo" autocomplete="off">
+      </label>
+
+      <div class="controls">
+        <button type="button" id="reset" class="btn ghost with-icon">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg>
+          Reiniciar
+        </button>
+        <button type="button" id="toggle" class="btn primary with-icon">
+          <svg class="ico solid" viewBox="0 0 24 24" aria-hidden="true"><path id="toggleIcon" d="M8 5.5l11 6.5-11 6.5z"/></svg>
+          <span id="toggleLabel">Iniciar</span>
+        </button>
+        <button type="button" id="skip" class="btn ghost with-icon">
+          Pular
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6l8 6-8 6zM17 6v12"/></svg>
+        </button>
+      </div>
+
+      <p class="hint">
+        <span>Gire o botão para ajustar o tempo.</span>
+        <span class="keys">Atalhos: <kbd>Espaço</kbd> inicia ou pausa, <kbd>R</kbd> reinicia, <kbd>P</kbd> pula.</span>
+      </p>
+    </section>
+
+    <section class="case stats" aria-label="Estatísticas">
+      <div class="block">
+        <div class="block-head"><h2>Hoje</h2><span class="aside" id="todayMinutes"></span></div>
+        <p class="today-line"><strong id="todayCount">0</strong> <span id="todayGoal"></span></p>
+        <div class="meter" id="meter" role="img"></div>
+        <p class="today-note" id="todayNote"></p>
+      </div>
+
+      <dl class="figures">
+        <div><dt>Dias seguidos</dt><dd id="streak">0 dias</dd></div>
+        <div><dt>Média dos últimos 7 dias</dt><dd id="average">0 min</dd></div>
+        <div><dt>Foco desde o início</dt><dd id="total">0 min</dd></div>
+      </dl>
+
+      <div class="block">
+        <div class="block-head"><h2>Últimos 7 dias</h2><span class="aside" id="weekTotal"></span></div>
+        <div class="chart" id="chart" role="img">
+          <div class="plot" id="plot">
+            <div class="goal-line" id="goalLine"><span id="goalLineLabel"></span></div>
+          </div>
+          <div class="days" id="days"></div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-head"><h2>Tomates por dia</h2><span class="aside" id="yearTotal"></span></div>
+        <div class="heatmap-scroll" id="heatmapScroll">
+          <div class="heatmap" id="heatmap" role="img"></div>
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span>Menos</span><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i><span>Mais</span>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="block">
+          <h2>Tarefas dos últimos 30 dias</h2>
+          <ol class="tasks" id="tasks"></ol>
+        </div>
+        <div class="block">
+          <h2>Sessões de hoje</h2>
+          <ul class="sessions" id="sessions"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="settings" aria-labelledby="settingsTitle">
+    <form id="settingsForm" method="dialog">
+      <h2 id="settingsTitle">Ajustes</h2>
+
+      <fieldset>
+        <legend>Duração em minutos</legend>
+        <div class="fields">
+          <label>Foco<input type="number" name="focus" min="1" max="180" required></label>
+          <label>Pausa curta<input type="number" name="short" min="1" max="60" required></label>
+          <label>Pausa longa<input type="number" name="long" min="1" max="90" required></label>
+          <label>Tomates até a pausa longa<input type="number" name="longEvery" min="2" max="12" required></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Meta</legend>
+        <div class="fields">
+          <label>Tomates por dia<input type="number" name="goal" min="1" max="24" required></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Comportamento</legend>
+        <label class="check"><input type="checkbox" name="autoStart"> Começar o próximo período sozinho</label>
+        <label class="check"><input type="checkbox" name="sound"> Tocar um sino no fim do período</label>
+        <label class="check"><input type="checkbox" name="notify" id="notifyBox"> Mostrar notificação do sistema</label>
+      </fieldset>
+
+      <div class="dialog-actions">
+        <button value="cancel" formnovalidate class="btn ghost">Cancelar</button>
+        <button value="save" class="btn primary">Salvar ajustes</button>
+      </div>
+
+      <fieldset class="data">
+        <legend>Seus dados</legend>
+        <p>O histórico fica salvo só neste navegador. Exporte um backup para guardar ou levar para outro computador.</p>
+        <div class="data-actions">
+          <button type="button" id="exportBtn" class="btn ghost small">Exportar backup</button>
+          <button type="button" id="importBtn" class="btn ghost small">Importar backup</button>
+          <button type="button" id="clearBtn" class="btn danger small">Apagar histórico</button>
+          <input type="file" id="importInput" accept="application/json,.json" hidden>
+        </div>
+        <p class="data-status" id="dataStatus" role="status"></p>
+      </fieldset>
+    </form>
+  </dialog>
+
+  <!-- Barra do celular: aparece quando o timer sai da tela -->
+  <div class="minibar" id="miniBar" inert>
+    <button type="button" class="minibar-time" id="miniTime" aria-label="Voltar ao timer">
+      <i class="led" aria-hidden="true"></i>
+      <span class="minibar-clock" id="miniClock">25:00</span>
+      <span class="minibar-mode" id="miniMode">Foco</span>
+    </button>
+    <button type="button" class="btn primary" id="miniToggle">Iniciar</button>
+  </div>
+
+  <div class="tip" id="tip" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Motion (motion.dev). Sem internet o app funciona igual, só sem animações. -->
+  <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

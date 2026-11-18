@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Carcaça Industrial Off-White -->
+  <rect width="512" height="512" rx="112" fill="#F2F0EB" />
+  <rect x="4" y="4" width="504" height="504" rx="108" fill="none" stroke="#E2DFD7" stroke-width="4" />
+
+  <!-- Setor de 25 Minutos (0° a 150°) -->
+  <path d="M 256 256 L 256 64 A 192 192 0 0 1 352 422.27 Z" fill="#FF3B00" opacity="0.14" />
+  <path d="M 256 64 A 192 192 0 0 1 352 422.27" fill="none" stroke="#FF3B00" stroke-width="8" />
+
+  <!-- Escala de Precisão (12 Marcações de 5 min) -->
+  <g stroke="#141413" stroke-width="6" stroke-linecap="butt">
+    <line x1="256" y1="52" x2="256" y2="76" stroke="#FF3B00" stroke-width="8" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(30 256 256)" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(60 256 256)" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(90 256 256)" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(120 256 256)" />
+    <!-- Marca de 25 Minutos (150°) em Destaque -->
+    <line x1="256" y1="48" x2="256" y2="80" stroke="#FF3B00" stroke-width="8" transform="rotate(150 256 256)" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(180 256 256)" opacity="0.3" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(210 256 256)" opacity="0.3" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(240 256 256)" opacity="0.3" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(270 256 256)" opacity="0.3" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(300 256 256)" opacity="0.3" />
+    <line x1="256" y1="56" x2="256" y2="72" transform="rotate(330 256 256)" opacity="0.3" />
+  </g>
+
+  <!-- Dial Rotativo Central (Matte Black) -->
+  <circle cx="256" cy="256" r="144" fill="#141413" />
+  <circle cx="256" cy="256" r="128" fill="none" stroke="#262624" stroke-width="2" />
+
+  <!-- Fenda Física do Seletor Apontando para 150° (25 min) -->
+  <g transform="rotate(150 256 256)">
+    <rect x="242" y="112" width="28" height="288" rx="4" fill="#1F1F1D" />
+    <rect x="248" y="124" width="16" height="110" rx="8" fill="#FF3B00" />
+    <circle cx="256" cy="340" r="6" fill="#52524E" />
+  </g>
+</svg>
